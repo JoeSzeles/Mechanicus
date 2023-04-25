@@ -1,0 +1,394 @@
+%!Adobe-FontList 1.11
+%Locale:0x409
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:8bitOperatorPlus-Bold
+FamilyName:8-bit Operator+
+StyleName:Bold
+FullName:8-bit Operator+ Bold
+MenuName:8-bit Operator+
+StyleBits:2
+WritingScript:Roman
+OutlineFileName:X:\C_Backup\nft generated\nft frogs FULL\nft catalouge 1\Font\8bitOperatorPlus-Bold.ttf
+DataFormat:sfntData
+FileLength:19748
+FileModTime:1398306604
+WeightClass:700
+WidthClass:5
+AngleClass:0
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:8-bitOperatorPlus-Regular
+FamilyName:8-bit Operator+
+StyleName:Regular
+FullName:8-bit Operator+ Regular
+MenuName:8-bit Operator+
+StyleBits:0
+WritingScript:Roman
+OutlineFileName:X:\C_Backup\nft generated\nft frogs FULL\nft catalouge 1\Font\8bitOperatorPlus-Regular.ttf
+DataFormat:sfntData
+FileLength:22020
+FileModTime:1398306604
+WeightClass:400
+WidthClass:5
+AngleClass:0
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:8bitOperatorPlus8-Bold
+FamilyName:8-bit Operator+ 8
+StyleName:Bold
+FullName:8-bit Operator+ 8 Bold
+MenuName:8-bit Operator+ 8
+StyleBits:2
+WritingScript:Roman
+OutlineFileName:X:\C_Backup\nft generated\nft frogs FULL\nft catalouge 1\Font\8bitOperatorPlus8-Bold.ttf
+DataFormat:sfntData
+FileLength:18784
+FileModTime:1398306604
+WeightClass:700
+WidthClass:5
+AngleClass:0
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:8-bitOperatorPlus8-Regular
+FamilyName:8-bit Operator+ 8
+StyleName:Regular
+FullName:8-bit Operator+ 8 Regular
+MenuName:8-bit Operator+ 8
+StyleBits:0
+WritingScript:Roman
+OutlineFileName:X:\C_Backup\nft generated\nft frogs FULL\nft catalouge 1\Font\8bitOperatorPlus8-Regular.ttf
+DataFormat:sfntData
+FileLength:20824
+FileModTime:1398306604
+WeightClass:400
+WidthClass:5
+AngleClass:0
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:8bitOperatorPlusSC-Bold
+FamilyName:8-bit Operator+ SC
+StyleName:Bold
+FullName:8-bit Operator+ SC Bold
+MenuName:8-bit Operator+ SC
+StyleBits:2
+WritingScript:Roman
+OutlineFileName:X:\C_Backup\nft generated\nft frogs FULL\nft catalouge 1\Font\8bitOperatorPlusSC-Bold.ttf
+DataFormat:sfntData
+FileLength:19516
+FileModTime:1398306604
+WeightClass:700
+WidthClass:5
+AngleClass:0
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:8-bitOperatorPlusSC-Regular
+FamilyName:8-bit Operator+ SC
+StyleName:Regular
+FullName:8-bit Operator+ SC Regular
+MenuName:8-bit Operator+ SC
+StyleBits:0
+WritingScript:Roman
+OutlineFileName:X:\C_Backup\nft generated\nft frogs FULL\nft catalouge 1\Font\8bitOperatorPlusSC-Regular.ttf
+DataFormat:sfntData
+FileLength:21772
+FileModTime:1398306606
+WeightClass:400
+WidthClass:5
+AngleClass:0
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:AgentOrange
+FamilyName:Agent Orange
+StyleName:Regular
+FullName:Agent Orange
+MenuName:Agent Orange
+StyleBits:0
+WritingScript:Roman
+OutlineFileName:X:\C_Backup\nft generated\nft frogs FULL\nft catalouge 1\Font\AgentOrange.ttf
+DataFormat:sfntData
+FileLength:40836
+FileModTime:1044736914
+WeightClass:400
+WidthClass:5
+AngleClass:0
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:Impact
+FamilyName:Impact
+StyleName:Regular
+FullName:Impact
+MenuName:Impact
+StyleBits:0
+WritingScript:Roman
+OutlineFileName:X:\C_Backup\nft generated\nft frogs FULL\nft catalouge 1\Font\impact.ttf
+DataFormat:sfntData
+FileLength:136076
+FileModTime:1469058116
+WeightClass:400
+WidthClass:3
+AngleClass:0
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:Impacted
+FamilyName:Impacted
+StyleName:Regular
+FullName:Impacted
+MenuName:Impacted
+StyleBits:0
+WritingScript:Roman
+OutlineFileName:X:\C_Backup\nft generated\nft frogs FULL\nft catalouge 1\Font\Impacted.ttf
+DataFormat:sfntData
+FileLength:107032
+FileModTime:1469058116
+WeightClass:400
+WidthClass:3
+AngleClass:0
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:KarmaticArcade
+FamilyName:Karmatic Arcade
+StyleName:Regular
+FullName:Karmatic Arcade
+MenuName:Karmatic Arcade
+StyleBits:0
+WritingScript:Roman
+OutlineFileName:X:\C_Backup\nft generated\nft frogs FULL\nft catalouge 1\Font\ka1.ttf
+DataFormat:sfntData
+FileLength:56908
+FileModTime:1118772202
+WeightClass:400
+WidthClass:5
+AngleClass:0
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:Type1
+FontName:Minecraft-Bold
+FamilyName:Minecraft
+StyleName:Bold
+FullName:Minecraft Bold
+MenuName:Minecraft
+StyleBits:2
+WritingScript:Roman
+OutlineFileName:X:\C_Backup\nft generated\nft frogs FULL\nft catalouge 1\Font\Minecraft-Bold.otf
+DataFormat:sfntData
+UsesStandardEncoding:yes
+isCFF:yes
+FileLength:11164
+FileModTime:1509935476
+WeightClass:700
+WidthClass:5
+AngleClass:0
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:Type1
+FontName:Minecraft-BoldItalic
+FamilyName:Minecraft
+StyleName:Bold Italic
+FullName:Minecraft Bold Italic
+MenuName:Minecraft
+StyleBits:3
+WritingScript:Roman
+OutlineFileName:X:\C_Backup\nft generated\nft frogs FULL\nft catalouge 1\Font\Minecraft-BoldItalic.otf
+DataFormat:sfntData
+UsesStandardEncoding:yes
+isCFF:yes
+FileLength:11772
+FileModTime:1509935632
+WeightClass:700
+WidthClass:5
+AngleClass:0
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:Type1
+FontName:Minecraft-Italic
+FamilyName:Minecraft
+StyleName:Italic
+FullName:Minecraft Italic
+MenuName:Minecraft
+StyleBits:1
+WritingScript:Roman
+OutlineFileName:X:\C_Backup\nft generated\nft frogs FULL\nft catalouge 1\Font\Minecraft-Italic.otf
+DataFormat:sfntData
+UsesStandardEncoding:yes
+isCFF:yes
+FileLength:12100
+FileModTime:1509935628
+WeightClass:400
+WidthClass:5
+AngleClass:0
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:Type1
+FontName:Minecraft-Regular
+FamilyName:Minecraft
+StyleName:Regular
+FullName:Minecraft Regular
+MenuName:Minecraft
+StyleBits:0
+WritingScript:Roman
+OutlineFileName:X:\C_Backup\nft generated\nft frogs FULL\nft catalouge 1\Font\Minecraft-Regular.otf
+DataFormat:sfntData
+UsesStandardEncoding:yes
+isCFF:yes
+FileLength:11016
+FileModTime:1509935478
+WeightClass:400
+WidthClass:5
+AngleClass:0
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:PixelColeco
+FamilyName:Pixel Coleco
+StyleName:Regular
+FullName:Pixel Coleco
+MenuName:Pixel Coleco
+StyleBits:0
+WritingScript:Roman
+OutlineFileName:X:\C_Backup\nft generated\nft frogs FULL\nft catalouge 1\Font\Pixel Coleco.otf
+DataFormat:sfntData
+FileLength:23128
+FileModTime:1383108254
+WeightClass:400
+WidthClass:5
+AngleClass:0
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:PixelGosub
+FamilyName:Pixel Gosub
+StyleName:Regular
+FullName:Pixel Gosub
+MenuName:Pixel Gosub
+StyleBits:0
+WritingScript:Roman
+OutlineFileName:X:\C_Backup\nft generated\nft frogs FULL\nft catalouge 1\Font\Pixel Gosub.otf
+DataFormat:sfntData
+FileLength:19804
+FileModTime:1383108456
+WeightClass:400
+WidthClass:5
+AngleClass:0
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:PixelModeX
+FamilyName:Pixel ModeX
+StyleName:Regular
+FullName:Pixel ModeX
+MenuName:Pixel ModeX
+StyleBits:0
+WritingScript:Roman
+OutlineFileName:X:\C_Backup\nft generated\nft frogs FULL\nft catalouge 1\Font\Pixel ModeX.otf
+DataFormat:sfntData
+FileLength:22616
+FileModTime:1383108840
+WeightClass:400
+WidthClass:5
+AngleClass:0
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:PixelNES
+FamilyName:Pixel NES
+StyleName:Regular
+FullName:Pixel NES
+MenuName:Pixel NES
+StyleBits:0
+WritingScript:Roman
+OutlineFileName:X:\C_Backup\nft generated\nft frogs FULL\nft catalouge 1\Font\Pixel NES.otf
+DataFormat:sfntData
+FileLength:21036
+FileModTime:1383108586
+WeightClass:400
+WidthClass:5
+AngleClass:0
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:PixelTandy
+FamilyName:Pixel Tandy
+StyleName:Regular
+FullName:Pixel Tandy
+MenuName:Pixel Tandy
+StyleBits:0
+WritingScript:Roman
+OutlineFileName:X:\C_Backup\nft generated\nft frogs FULL\nft catalouge 1\Font\Pixel Tandy.otf
+DataFormat:sfntData
+FileLength:24012
+FileModTime:1383109068
+WeightClass:400
+WidthClass:5
+AngleClass:0
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:Impact
+FamilyName:Impact
+StyleName:Regular
+FullName:Impact
+MenuName:Impact
+StyleBits:0
+FamilyNameNative:
+StyleNameNative:Regular
+FullNameNative:
+WritingScript:Japanese
+OutlineFileName:X:\C_Backup\nft generated\nft frogs FULL\nft catalouge 1\Font\unicode.impact.ttf
+DataFormat:sfntData
+FileLength:77666
+FileModTime:1469058116
+WeightClass:400
+WidthClass:5
+AngleClass:0
+%EndFont
+
