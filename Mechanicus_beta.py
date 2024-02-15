@@ -56,7 +56,7 @@ import matplotlib.pyplot as plt
 import importlib
 import config3
 import subprocess
-
+from config3 import z_start, z_center, z_end, gradient_length_percentage
 gcode = ""
 global job_id
 global xt, yt
@@ -2702,7 +2702,7 @@ def Oil_Paint_Gcode(e, gcode):
 def activate_gcode():
       
     # Open serial port
-    ser = serial.Serial(Serial_connection, Baud)
+    ser = serial.Serial('COM7', 250000)
     
 
     # Send G-code commands to the plotter
@@ -2775,7 +2775,7 @@ def Paint_Gcode(e, gcode):
 def send_gcode(gcode_line):
     try:
         # Open serial port
-        ser = serial.Serial(Serial_connection, Baud)
+        ser = serial.Serial('COM7', 250000)
         
         # Write the G-code command to the file
         with open('gcode_test4.gcode', 'a') as f:
@@ -3162,13 +3162,14 @@ def select_svg_file():
     root.destroy()
 
     # Pass the SVG file path to the load_svg() function
-    load_svg(svg_path, cv, z_start, z_center, z_end, gradient_length_mm)
+    load_svg(svg_path, cv, z_start, z_center, z_end, gradient_length_percentage)
+from config3 import Refill 
+import gcodegenerator_brush_refill
 
-
-from config3 import *
 
 def load_svg(svg_path, cv, z_start, z_center, z_end, gradient_length_percentage):
     # Set the path to the output GCode file
+
     gcode_path = filedialog.asksaveasfilename(defaultextension='.gcode', filetypes=[('G-code files', '*.gcode')])
     if not gcode_path:
         return
@@ -3181,7 +3182,7 @@ def load_svg(svg_path, cv, z_start, z_center, z_end, gradient_length_percentage)
     if Refill == True:
         gcodegenerator_brush_refill.generate_gcode(svg_path, gcode_path)
     else:
-        gcodegenerator.generate_gcode(svg_path, gcode_path, z_start, z_center, z_end, gradient_length_mm) 
+        gcodegenerator.generate_gcode(svg_path, gcode_path, z_start, z_center, z_end, gradient_length_percentage)
     # Print a success message
     print('GCode generated and saved to %s' % gcode_path)
 
@@ -3191,6 +3192,38 @@ def load_svg(svg_path, cv, z_start, z_center, z_end, gradient_length_percentage)
     # Extract X and Y coordinates from GCode file
     x_coords = []
     y_coords = []
+    
+    
+    
+    
+    
+    
+    # Calculate Z coordinates for each path segment using the ACDB method
+    z_coords = []
+    for i in range(len(x_coords) - 1):
+        point_A = (x_coords[i], y_coords[i], z_start)
+        point_B = (x_coords[i + 1], y_coords[i + 1], z_end)
+        gradient_length = gradient_length_percentage * np.linalg.norm(np.array(point_A)[:2] - np.array(point_B)[:2])
+
+        # Calculate points C and D
+        point_C = (point_A[0] + gradient_length, point_A[1], z_center)
+        point_D = (point_B[0] - gradient_length, point_B[1], z_center)
+
+        # Create points along the ACDB line for this segment
+        num_points = 100  # Number of points for visualization
+        x_values = [point_A[0] + (point_C[0] - point_A[0]) * t / gradient_length for t in range(num_points)] + \
+                   [point_C[0] + (point_D[0] - point_C[0]) * t / gradient_length for t in range(num_points)] + \
+                   [point_D[0] + (point_B[0] - point_D[0]) * t / gradient_length for t in range(num_points)]
+        y_values = [point_A[1] + (point_C[1] - point_A[1]) * t / gradient_length for t in range(num_points)] + \
+                   [point_C[1] + (point_D[1] - point_C[1]) * t / gradient_length for t in range(num_points)] + \
+                   [point_D[1] + (point_B[1] - point_D[1]) * t / gradient_length for t in range(num_points)]
+        z_values = [point_A[2] + (point_C[2] - point_A[2]) * t / gradient_length for t in range(num_points)] + \
+                   [point_C[2] + (point_D[2] - point_C[2]) * t / gradient_length for t in range(num_points)] + \
+                   [point_D[2] for _ in range(num_points)]  # Constant Z for the path segment
+
+        z_coords.extend(z_values)  # Append the Z values for this segment
+
+    # Now you have the calculated Z coordinates in z_coords
 
     with open(gcode_path, 'r') as f:
         for line in f:
@@ -3213,15 +3246,44 @@ def load_svg(svg_path, cv, z_start, z_center, z_end, gradient_length_percentage)
     scaled_x_coords = [x * scale_factor for x in x_coords]
     max_y = max(y_coords)
     scaled_y_coords = [(max_y - y) * scale_factor for y in y_coords]
+    
+    # Calculate Z coordinates for each point in the path segment
+    z_coords = []  # Initialize an empty list for Z coordinates
 
-
-
-    # Draw the rest of the lines on the canvas using the scaled X and Y coordinates
     for i in range(1, len(scaled_x_coords)):
-        cv.create_line(scaled_x_coords[i-1], scaled_y_coords[i-1], scaled_x_coords[i], scaled_y_coords[i], fill='blue', width=1, capstyle=ROUND, smooth=TRUE, splinesteps=120, tags=('all_lines', f"'{linecount}'"))
-        draw.line((scaled_x_coords[i-1], scaled_y_coords[i-1], scaled_x_coords[i], scaled_y_coords[i]), fill='blue', width=1)
-        print(f"create line '{linecount}' from ({scaled_x_coords[i-1]},{scaled_y_coords[i-1]}) to ({scaled_x_coords[i]},{scaled_y_coords[i]}) with brush size 2 and color blue")
-        linecount += 1
+        x1, y1, z1 = scaled_x_coords[i-1], scaled_y_coords[i-1], z_coords[i-1] if i-1 < len(z_coords) else z_center
+        x2, y2, z2 = scaled_x_coords[i], scaled_y_coords[i], z_coords[i] if i < len(z_coords) else z_center
+
+        # Create a line with varying Z coordinates
+        num_points = 100  # Number of points for visualization
+        x_values = [x1 + (x2 - x1) * t / num_points for t in range(num_points)]
+        y_values = [y1 + (y2 - y1) * t / num_points for t in range(num_points)]
+        z_values = [z1 + (z2 - z1) * t / num_points for t in range(num_points)]
+
+        z_coords.extend(z_values)  # Append the Z values to the z_coords list
+
+    # Now, you can use the z_coords list to set Z coordinates for each point in the path
+    for i in range(1, len(scaled_x_coords)):
+        x1, y1, z1 = scaled_x_coords[i-1], scaled_y_coords[i-1], z_coords[i-1]
+        x2, y2, z2 = scaled_x_coords[i], scaled_y_coords[i], z_coords[i]
+
+        # Create a line with varying Z coordinates
+        num_points = 100  # Number of points for visualization
+        x_values = [x1 + (x2 - x1) * t / num_points for t in range(num_points)]
+        y_values = [y1 + (y2 - y1) * t / num_points for t in range(num_points)]
+        z_values = [z1 + (z2 - z1) * t / num_points for t in range(num_points)]
+
+        for j in range(1, len(x_values)):
+            cv.create_line(
+                x_values[j-1], y_values[j-1], x_values[j], y_values[j],
+                fill='blue', width=1, capstyle=ROUND, smooth=TRUE, splinesteps=120, tags=('all_lines', f"'{linecount}'")
+            )
+            draw.line((x_values[j-1], y_values[j-1], x_values[j], y_values[j]), fill='blue', width=1)
+            print(f"create line '{linecount}' from ({x_values[j-1]},{y_values[j-1]},{z_values[j-1]}) to ({x_values[j]},{y_values[j]},{z_values[j]}) with brush size 2 and color blue")
+            linecount += 1
+
+
+    
 
 
 
@@ -3543,7 +3605,7 @@ def Imagevectorbutton():
     
 def Spiralbutton():
      Spirals()
-     
+    
 #appwindow.pack(pady=0) 
 with Image.open('temp2.png') as img:
     width6, height6 = img.size

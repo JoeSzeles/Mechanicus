@@ -8,7 +8,6 @@ from PIL import ImageTk
 import datetime
 import os
 from telnetlib import OUTMRK
-
 from PIL import ImageDraw
 from PIL import ImageFont,ImageEnhance, ImageFilter, ImageOps, ImageChops, ImageGrab
 from click import open_file
@@ -55,7 +54,6 @@ import gcodegenerator
 import matplotlib.pyplot as plt
 import importlib
 import config3
-import subprocess
 
 gcode = ""
 global job_id
@@ -118,7 +116,7 @@ stp=20 #Number os undos, steps back
 
 from Mechanicus_Config import *
 from Mechanicus_shape_detection_image_working import*
-from Spiral import*
+
 sys.setrecursionlimit(30000) # set the recursion limit to 10000
 
 
@@ -2700,9 +2698,9 @@ def Oil_Paint_Gcode(e, gcode):
     cv.bind('<ButtonRelease-1>', key_released)
     
 def activate_gcode():
-      
+  
     # Open serial port
-    ser = serial.Serial(Serial_connection, Baud)
+    ser = serial.Serial('COM4', 115200)
     
 
     # Send G-code commands to the plotter
@@ -2717,8 +2715,7 @@ def activate_gcode():
         "G1 X0.0 Y0.0 F9000\n",  # Move the platform to the origin
         "G1 E30\n",  # Extrude 30mm of filament
         "G92 E0\n",  # Reset extruder position again
-        "G1 F1400\n",  # Set movement speed
-        "G1 Z40 F300 "
+        "G1 F1400\n"  # Set movement speed
     ]
     for command in gcode_commands:
         ser.write(str.encode(command))
@@ -2750,17 +2747,16 @@ def Paint_Gcode(e, gcode):
         cv.create_line(lastx, lasty, x, y, fill=hexstr, width=int(bsize), capstyle=ROUND, smooth=TRUE, splinesteps=120, tags=('all_lines', f"'{linecount}'"))
         draw.line((lastx, lasty, x, y), fill='green', width=4)
         print(f"create line '{linecount}' from ({lastx},{lasty}) to ({x},{y}) with brush size {bsize} and color {hexstr}")
-        gcode_line = f"G1 X{bed_x:.2f} Y{bed_y:.2f} Z11.8 F{3000}\n"  # generate the G-code command #### Draw height
+        gcode_line = f"G1 X{bed_x:.2f} Y{bed_y:.2f} Z5 F{3000}\n"  # generate the G-code command
         print(f"G-code command: {gcode_line}")
         send_gcode(gcode_line)  # send the G-code command to the printer
         
-        
         linecount += 1
     lastx, lasty = x, y
-    
+
     def key_released(e):
     
-        send_gcode("G1 Z20") ###TRAVEL HEIGHT 
+        send_gcode("G1 Z10") 
         cv.bind('<ButtonRelease-1>', key_released)
         global linecount
         print(f"end line '{linecount}' at ({lastx},{lasty})")
@@ -2771,27 +2767,18 @@ def Paint_Gcode(e, gcode):
     cv.bind('<ButtonRelease-1>', key_released)
 
 
-
+   
 def send_gcode(gcode_line):
-    try:
-        # Open serial port
-        ser = serial.Serial(Serial_connection, Baud)
-        
-        # Write the G-code command to the file
-        with open('gcode_test4.gcode', 'a') as f:
-            f.write(gcode_line + '\n')  # Add a newline character
-            
-        # Send the G-code command to the machine
-        ser.write(gcode_line.encode())
-        ser.flush()  # Flush the serial buffer
-        
-    except serial.SerialException as e:
-        print(f"Serial communication error: {e}")
-    finally:
-        if ser.is_open:
-            ser.close()  # Close the serial port
+    # Open serial port
+    ser = serial.Serial('COM4', 115200)
 
-
+    # Write the G-code command to the file
+    with open('gcode_test4.gcode', 'a') as f:
+        f.write(gcode_line)
+ 
+    
+    # go to travel height
+    ser.write(gcode_line.encode()) 
     
 def Gbrush_refill(event):
     # Get current mouse position
@@ -3162,12 +3149,11 @@ def select_svg_file():
     root.destroy()
 
     # Pass the SVG file path to the load_svg() function
-    load_svg(svg_path, cv, z_start, z_center, z_end, gradient_length_mm)
+    load_svg(svg_path, cv)
 
 
-from config3 import *
 
-def load_svg(svg_path, cv, z_start, z_center, z_end, gradient_length_percentage):
+def load_svg(svg_path, cv):
     # Set the path to the output GCode file
     gcode_path = filedialog.asksaveasfilename(defaultextension='.gcode', filetypes=[('G-code files', '*.gcode')])
     if not gcode_path:
@@ -3181,7 +3167,7 @@ def load_svg(svg_path, cv, z_start, z_center, z_end, gradient_length_percentage)
     if Refill == True:
         gcodegenerator_brush_refill.generate_gcode(svg_path, gcode_path)
     else:
-        gcodegenerator.generate_gcode(svg_path, gcode_path, z_start, z_center, z_end, gradient_length_mm) 
+        gcodegenerator.generate_gcode(svg_path, gcode_path) 
     # Print a success message
     print('GCode generated and saved to %s' % gcode_path)
 
@@ -3533,6 +3519,10 @@ def place_image(e):
     cv.itemconfigure(drawimg, image = img)
     
 
+
+
+
+
 def Configwindow():
    
     Config()
@@ -3540,10 +3530,8 @@ def Configwindow():
 def Imagevectorbutton():
     
     Imagevector()
+
     
-def Spiralbutton():
-     Spirals()
-     
 #appwindow.pack(pady=0) 
 with Image.open('temp2.png') as img:
     width6, height6 = img.size
@@ -3806,8 +3794,6 @@ savefile= tk.Button(root, text="Save", height=2, width=7, fg="white", bg="#263d4
 
 config_button = tk.Button(root, text="Config", height=2, width=7, fg="white", bg="red" , command=Configwindow).place(x=0, y=740)
 tracker_button = tk.Button(root, text="Imagevector", height=2, width=14, fg="white", bg="red" , command=Imagevectorbutton).place(x=59, y=740)
-spiral_button = tk.Button(root, text="Spirals", height=2, width=14, fg="white", bg="red" , command=Spiralbutton).place(x=118, y=740)
-
 
 
 randomhueb = tk.Button(root, text="New File", height=2, width=7, fg="white", bg="#263d42" , command=newimage).place(x=162, y=700)
