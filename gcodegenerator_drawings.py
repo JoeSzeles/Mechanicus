@@ -80,61 +80,46 @@ def get_shapes(svg_path, auto_scale=False, scale_factor=scaleF, offset_x=x_offse
 
 
 
-def g_string(x, y, z=False, prefix="G1", p=3, feed_rate=None):
+def g_string(x, y, z=False, prefix="G1", p=3):
     if z is not False:
-        if feed_rate is not None:
-            feed_rate_str = f"F{feed_rate:.3g}"  # Adjust the precision as needed
-            return f"{prefix} X{x:.3f} Y{y:.3f} Z{z:.3f} {feed_rate_str}"
-        else:
-            return f"{prefix} X{x:.3f} Y{y:.3f} Z{z:.3f}"
+        return f"{prefix} X{x:.{p}f} Y{y:.{p}f} Z{z:.{p}f}"
     else:
-        if feed_rate is not None:
-            feed_rate_str = f"F{feed_rate:.3g}"  # Adjust the precision as needed
-            return f"{prefix} X{x:.3f} Y{y:.3f} {feed_rate_str}"
-        else:
-            return f"{prefix} X{x:.3f} Y{y:.3f}"
-
-
-
+        return f"{prefix} X{x:.{p}f} Y{y:.{p}f}"
 def shapes_2_gcode(shapes):
     t1 = dt.now()
     with open("header.txt") as h:
         header = h.read()
-    commands = [f"{header}"]
+    commands = [f"{header}", f'F{feed_rate}']
     commands.append(shape_preamble)
-
     for i, shape in enumerate(shapes):
         start = shape[0]
         end = shape[-1]
         if i < len(shapes) - 1:
-            next_start = shapes[i + 1][0]
+            next_start = shapes[i+1][0]
             if end == next_start:
                 # end of current shape is connected to start of next shape
-                commands.append(g_string(start[0], start[1], zTravel, "G0", feed_rate=travel_speed))  # Move to the next shape's starting point
                 for j in shape:
-                    commands.append(g_string(j[0], j[1], zDraw, f'G1', draw_speed, feed_rate=draw_speed))
+                    commands.append(g_string(j[0], j[1], zDraw))
             else:
                 # end of current shape is not connected to start of next shape
-                commands.append(g_string(start[0], start[1], zTravel, "G0", feed_rate=travel_speed))  # Move to the new shape's starting point
-                commands.append(g_string(start[0], start[1], zDraw, f'G1', draw_speed, feed_rate=draw_speed))  # Lower to zDraw
-                for j in shape[1:]:  # Start from the second point to avoid double lowering at the beginning
-                    commands.append(g_string(j[0], j[1], zDraw, f'G1', draw_speed, feed_rate=draw_speed))
-                commands.append(g_string(end[0], end[1], zTravel, "G0", feed_rate=travel_speed))  # Lift at the end of the shape
+                commands.append(g_string(start[0], start[1], zTravel, "G0"))
+                for j in shape:
+                    commands.append(g_string(j[0], j[1], zDraw, f"F{draw_speed}"))
+                commands.append(g_string(end[0], end[1], zLift, "G0"))
         else:
             # last shape
-            commands.append(g_string(start[0], start[1], zTravel, "G0", feed_rate=travel_speed))  # Move to the last shape's starting point
-            commands.append(g_string(start[0], start[1], zDraw, f'G1', draw_speed, feed_rate=draw_speed))  # Lower to zDraw
-            for j in shape[1:]:  # Start from the second point to avoid double lowering at the beginning
-                commands.append(g_string(j[0], j[1], zDraw, f'G1', draw_speed, feed_rate=draw_speed))
-            commands.append(g_string(end[0], end[1], zTravel, "G0", feed_rate=travel_speed))  # Return to zTravel
-
-
+            commands.append(g_string(start[0], start[1], zTravel, "G0"))
+            for j in shape:
+                commands.append(g_string(j[0], j[1], zDraw, f"F{draw_speed}"))
+            commands.append(g_string(end[0], end[1], zTravel, "G0"))
+            
     commands += ["(home)", f"G0 {zTravel}", f"G0 X0 Y0"]
 
     timer(t1, "shapes_2_gcode   ")
     importlib.reload(config3)
     return commands
-            
+
+                 
               
 def generate_gcode(svg_path, gcode_path):
     shapes = get_shapes(svg_path, scale_factor=scaleF, offset_x=0, offset_y=0)
@@ -168,3 +153,4 @@ def write_file(output, commands):
         for i in commands:
             output_file.write(i + "\n")
     timer(t1, "writing file     ")
+

@@ -1,0 +1,28 @@
+;Sliced at: {day} {date} {time}
+;Basic settings: Layer height: {layer_height} Walls: {wall_thickness} Fill: {infill_sparse_density}
+G21 ;metric values
+G90 ;absolute positioning
+M82 ;set extruder to absolute mode
+M107 ;start with the fan off
+M117 Start heating ...
+M104 S{material_print_temperature_layer_0}
+M117 Homing X/Y ...
+G28 X0 Y0 ;move X/Y to min endstops
+M117 Homing Z ...
+G28 Z0 ;move Z to min endstops
+  ;move the platform down 15mm
+M117 Start cleaning ...
+M117 Intro line ...
+G1 Z2.0 F3000 ; Move Z Axis up little to prevent scratching of Heat Bed
+G1 X0.1 Y20 Z{layer_height} F5000.0 ; Move to start position
+G1 X0.1 Y200.0 Z{layer_height} F1500.0 E15 ; Draw the first line
+G1 X0.4 Y200.0 Z{layer_height} F5000.0 ; Move to side a little
+G1 X0.4 Y20 Z0.3 F1500.0 E30 ; Draw the second line
+G1 Z2.0 F3000 ; Move Z Axis up little to prevent scratching of Heat Bed
+G1 X5 Y20 Z0.3 F{speed_travel} ; Move over to prevent blob squish
+G1 F{speed_travel}
+
+G1 Z40.0
+M117 Printing...
+
+

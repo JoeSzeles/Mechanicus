@@ -11,7 +11,7 @@ import importlib
 import config3
 importlib.reload(config3)
 from config3 import *
-sys.setrecursionlimit(30000) # set the recursion limit to 10000
+sys.setrecursionlimit(30000)  # set the recursion limit to 10000
 
 
 def get_shapes(svg_path, auto_scale=False, scale_factor=scaleF, offset_x=x_offset, offset_y=y_offset):
@@ -79,9 +79,8 @@ def get_shapes(svg_path, auto_scale=False, scale_factor=scaleF, offset_x=x_offse
     return shapes
 
 
-
-def g_string(x, y, z=False, prefix="G1", p=3, feed_rate=None):
-    if z is not False:
+def g_string(x, y, z=None, prefix="G1", p=3, feed_rate=None):
+    if z is not None:
         if feed_rate is not None:
             feed_rate_str = f"F{feed_rate:.3g}"  # Adjust the precision as needed
             return f"{prefix} X{x:.3f} Y{y:.3f} Z{z:.3f} {feed_rate_str}"
@@ -95,8 +94,7 @@ def g_string(x, y, z=False, prefix="G1", p=3, feed_rate=None):
             return f"{prefix} X{x:.3f} Y{y:.3f}"
 
 
-
-def shapes_2_gcode(shapes):
+def shapes_2_gcode(shapes, z_start, z_center, z_end, gradient_length_percentage):
     t1 = dt.now()
     with open("header.txt") as h:
         header = h.read()
@@ -110,33 +108,33 @@ def shapes_2_gcode(shapes):
             next_start = shapes[i + 1][0]
             if end == next_start:
                 # end of current shape is connected to start of next shape
-                commands.append(g_string(start[0], start[1], zTravel, "G0", feed_rate=travel_speed))  # Move to the next shape's starting point
+                commands.append(g_string(start[0], start[1], z_start, "G0", feed_rate=travel_speed))  # Move to the next shape's starting point
                 for j in shape:
-                    commands.append(g_string(j[0], j[1], zDraw, f'G1', draw_speed, feed_rate=draw_speed))
+                    commands.append(g_string(j[0], j[1], z_center, f'G1', draw_speed, feed_rate=draw_speed))
+                commands.append(g_string(end[0], end[1], z_end, "G0", feed_rate=travel_speed))  # Lift at the end of the shape
             else:
                 # end of current shape is not connected to start of next shape
-                commands.append(g_string(start[0], start[1], zTravel, "G0", feed_rate=travel_speed))  # Move to the new shape's starting point
-                commands.append(g_string(start[0], start[1], zDraw, f'G1', draw_speed, feed_rate=draw_speed))  # Lower to zDraw
+                commands.append(g_string(start[0], start[1], z_start, "G0", feed_rate=travel_speed))  # Move to the new shape's starting point
+                commands.append(g_string(start[0], start[1], z_center, f'G1', draw_speed, feed_rate=draw_speed))  # Lower to z_center
                 for j in shape[1:]:  # Start from the second point to avoid double lowering at the beginning
-                    commands.append(g_string(j[0], j[1], zDraw, f'G1', draw_speed, feed_rate=draw_speed))
-                commands.append(g_string(end[0], end[1], zTravel, "G0", feed_rate=travel_speed))  # Lift at the end of the shape
+                    commands.append(g_string(j[0], j[1], z_center, f'G1', draw_speed, feed_rate=draw_speed))
+                commands.append(g_string(end[0], end[1], z_start, "G0", feed_rate=travel_speed))  # Lift at the end of the shape
         else:
             # last shape
-            commands.append(g_string(start[0], start[1], zTravel, "G0", feed_rate=travel_speed))  # Move to the last shape's starting point
-            commands.append(g_string(start[0], start[1], zDraw, f'G1', draw_speed, feed_rate=draw_speed))  # Lower to zDraw
+            commands.append(g_string(start[0], start[1], z_start, "G0", feed_rate=travel_speed))  # Move to the last shape's starting point
+            commands.append(g_string(start[0], start[1], z_center, f'G1', draw_speed, feed_rate=draw_speed))  # Lower to z_center
             for j in shape[1:]:  # Start from the second point to avoid double lowering at the beginning
-                commands.append(g_string(j[0], j[1], zDraw, f'G1', draw_speed, feed_rate=draw_speed))
-            commands.append(g_string(end[0], end[1], zTravel, "G0", feed_rate=travel_speed))  # Return to zTravel
+                commands.append(g_string(j[0], j[1], z_center, f'G1', draw_speed, feed_rate=draw_speed))
+            commands.append(g_string(end[0], end[1], z_start, "G0", feed_rate=travel_speed))  # Return to z_start
 
-
-    commands += ["(home)", f"G0 {zTravel}", f"G0 X0 Y0"]
+    commands += ["(home)", f"G0 {z_start}", f"G0 X0 Y0"]
 
     timer(t1, "shapes_2_gcode   ")
     importlib.reload(config3)
     return commands
-            
-              
-def generate_gcode(svg_path, gcode_path):
+
+
+def generate_gcode(svg_path, gcode_path, z_start, z_center, z_end, gradient_length_percentage):
     shapes = get_shapes(svg_path, scale_factor=scaleF, offset_x=0, offset_y=0)
 
     if optimise:
@@ -151,9 +149,9 @@ def generate_gcode(svg_path, gcode_path):
         print("optimized distance: ", post_distance)
         print("factor: ", post_distance / pre_distance)
 
-        commands = shapes_2_gcode(new_order)
+        commands = shapes_2_gcode(new_order, z_start, z_center, z_end, gradient_length_percentage)
     else:
-        commands = shapes_2_gcode(shapes)
+        commands = shapes_2_gcode(shapes, z_start, z_center, z_end, gradient_length_percentage)
 
     with open(gcode_path, 'w+') as output:
         for command in commands:
@@ -161,8 +159,8 @@ def generate_gcode(svg_path, gcode_path):
 
     print(f"G-Code generated and saved to {gcode_path}")
 
+
 def write_file(output, commands):
-    
     t1 = dt.now()
     with open(output, 'w+') as output_file:
         for i in commands:
