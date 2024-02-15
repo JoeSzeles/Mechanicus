@@ -62,3 +62,4 @@ def optimise_path(shapes, sq=False):
 
     timer(t1, "optimizing       ")
     return new_order
+
